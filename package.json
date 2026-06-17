@@ -1,0 +1,13 @@
+{
+  "name": "web-scraper-zip",
+  "version": "1.0.0",
+  "description": "Web scraper to ZIP - Vercel deployment",
+  "main": "api/scrape.js",
+  "engines": {
+    "node": ">=18.x"
+  },
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {}
+}
