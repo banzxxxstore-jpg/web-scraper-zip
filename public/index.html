@@ -6,160 +6,298 @@
 <title>Web Scraper → ZIP</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg:       #0f1117;
-    --surface:  #1a1d27;
-    --card:     #21242f;
-    --border:   #2d3148;
-    --border2:  #3d4260;
-    --text:     #e8eaf0;
-    --muted:    #7b82a0;
-    --accent:   #6c72ff;
-    --accent2:  #5a5ff0;
-    --green:    #22c55e;
-    --red:      #ef4444;
-    --yellow:   #f59e0b;
-    --cyan:     #22d3ee;
-    --mono:     'JetBrains Mono', monospace;
-    --sans:     'Inter', sans-serif;
-    --radius:   10px;
-    --radius-lg: 14px;
+    --bg: #090a0f;
+    --surface: #121420;
+    --card: #181b2c;
+    --border: rgba(255, 255, 255, 0.07);
+    --border-hover: rgba(108, 114, 255, 0.3);
+    --text: #f3f4f6;
+    --muted: #8b949e;
+    --accent: #6c72ff;
+    --accent-glow: rgba(108, 114, 255, 0.4);
+    --accent-grad: linear-gradient(135deg, #6c72ff 0%, #4f46e5 100%);
+    --green: #10b981;
+    --green-bg: rgba(16, 185, 129, 0.1);
+    --red: #f43f5e;
+    --red-bg: rgba(244, 63, 94, 0.1);
+    --yellow: #f59e0b;
+    --yellow-bg: rgba(245, 158, 11, 0.1);
+    --cyan: #06b6d4;
+    --cyan-bg: rgba(6, 182, 212, 0.1);
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Plus Jakarta Sans', sans-serif;
+    --radius-sm: 8px;
+    --radius: 12px;
+    --radius-lg: 20px;
+    --shadow: 0 12px 40px -12px rgba(0, 0, 0, 0.5);
   }
 
   body {
     font-family: var(--sans);
     background: var(--bg);
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(108, 114, 255, 0.12) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.08) 0px, transparent 50%);
+    background-attachment: fixed;
     color: var(--text);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 48px 16px 80px;
+    padding: 60px 20px 100px;
   }
 
-  .container { width: 100%; max-width: 680px; }
+  .container { width: 100%; max-width: 660px; }
 
   /* ── Header ── */
   .header { text-align: center; margin-bottom: 40px; }
   .logo {
-    display: inline-flex; align-items: center; gap: 10px;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 50px; padding: 8px 18px; margin-bottom: 24px;
-    font-size: 13px; font-weight: 500; color: var(--muted);
-    letter-spacing: 0.04em;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255, 255, 255, 0.03); 
+    border: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+    border-radius: 100px; padding: 6px 16px; margin-bottom: 20px;
+    font-size: 12px; font-weight: 600; color: var(--text);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
   }
-  .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
-  .header h1 { font-size: 32px; font-weight: 600; letter-spacing: -0.03em; margin-bottom: 10px; }
-  .header h1 span { color: var(--accent); }
-  .header p { font-size: 15px; color: var(--muted); line-height: 1.6; }
+  .logo-dot { 
+    width: 6px; height: 6px; border-radius: 50%; 
+    background: #6c72ff; 
+    box-shadow: 0 0 10px #6c72ff, 0 0 20px #6c72ff; 
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% { transform: scale(0.9); opacity: 0.6; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(0.9); opacity: 0.6; }
+  }
+  .header h1 { 
+    font-size: 38px; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 12px; 
+    background: linear-gradient(135deg, #fff 40%, #a5b4fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .header h1 span { 
+    background: var(--accent-grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+  }
+  .header p { font-size: 15px; color: var(--muted); line-height: 1.6; font-weight: 400; max-width: 480px; margin: 0 auto; }
 
   /* ── Card ── */
   .card {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 24px;
-    margin-bottom: 16px;
+    padding: 28px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(16px);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+  .card:hover {
+    border-color: rgba(255, 255, 255, 0.1);
   }
   .card-label {
-    font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--muted); margin-bottom: 12px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 16px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .card-label::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
   }
 
   /* ── URL Input ── */
-  .url-row { display: flex; gap: 8px; }
+  .url-row { display: flex; gap: 10px; position: relative; }
+  .url-wrapper {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+  .url-icon {
+    position: absolute;
+    left: 14px;
+    color: var(--muted);
+    font-size: 14px;
+    pointer-events: none;
+  }
   .url-input {
-    flex: 1; height: 46px; padding: 0 14px;
-    background: var(--surface); border: 1px solid var(--border2);
+    width: 100%; height: 50px; padding: 0 14px 0 38px;
+    background: var(--surface); border: 1px solid var(--border);
     border-radius: var(--radius); color: var(--text);
     font-family: var(--mono); font-size: 13px; outline: none;
-    transition: border-color 0.15s;
+    transition: all 0.2s ease;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
   }
-  .url-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(108,114,255,0.15); }
-  .url-input::placeholder { color: var(--muted); font-family: var(--sans); }
+  .url-input:focus { 
+    border-color: var(--accent); 
+    box-shadow: 0 0 0 3px var(--accent-glow), inset 0 2px 4px rgba(0,0,0,0.1); 
+    background: rgba(18, 20, 32, 0.8);
+  }
+  .url-input::placeholder { color: #4e5569; font-family: var(--sans); }
 
+  /* ── Buttons ── */
   .btn {
-    height: 46px; padding: 0 20px; border-radius: var(--radius);
-    border: 1px solid var(--border2); background: var(--surface);
-    color: var(--text); font-size: 14px; font-weight: 500;
-    cursor: pointer; display: flex; align-items: center; gap: 8px;
-    transition: all 0.15s; white-space: nowrap;
+    height: 50px; padding: 0 22px; border-radius: var(--radius);
+    border: 1px solid var(--border); background: var(--surface);
+    color: var(--text); font-size: 14px; font-weight: 600;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); white-space: nowrap;
+    user-select: none;
   }
-  .btn:hover { background: var(--border); }
-  .btn:active { transform: scale(0.97); }
+  .btn:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); }
+  .btn:active { transform: scale(0.96); }
+  
   .btn-primary {
-    background: var(--accent); border-color: var(--accent); color: #fff;
+    background: var(--accent-grad); border: none; color: #fff;
+    box-shadow: 0 4px 15px rgba(108, 114, 255, 0.3);
   }
-  .btn-primary:hover { background: var(--accent2); border-color: var(--accent2); }
-  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-  .btn-green { background: rgba(34,197,94,0.15); border-color: rgba(34,197,94,0.3); color: var(--green); }
-  .btn-green:hover { background: rgba(34,197,94,0.25); }
+  .btn-primary:hover { 
+    opacity: 0.95;
+    box-shadow: 0 6px 20px rgba(108, 114, 255, 0.45);
+  }
+  .btn-primary:disabled { 
+    background: #2e3044; color: var(--muted); opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; 
+  }
+  
+  .btn-reset {
+    width: 50px; padding: 0; display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: 18px;
+  }
+  .btn-reset:hover {
+    color: var(--text);
+    border-color: var(--border-hover);
+  }
 
-  /* ── Options ── */
-  .opts-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+  .btn-green { 
+    background: var(--green); border: none; color: #fff; 
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
+  }
+  .btn-green:hover { 
+    background: #059669; 
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  }
+
+  /* ── Options (Chips) ── */
+  .opts-grid { display: flex; flex-wrap: wrap; gap: 10px; }
   .opt-chip {
-    display: flex; align-items: center; gap: 7px;
-    padding: 6px 14px; border-radius: 50px;
-    border: 1px solid var(--border2); background: var(--surface);
-    font-size: 13px; color: var(--muted); cursor: pointer;
-    transition: all 0.15s; user-select: none;
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 16px; border-radius: 100px;
+    border: 1px solid var(--border); background: var(--surface);
+    font-size: 13px; font-weight: 500; color: var(--muted); cursor: pointer;
+    transition: all 0.2s ease; user-select: none;
   }
   .opt-chip input { display: none; }
-  .opt-chip.active { border-color: var(--accent); background: rgba(108,114,255,0.12); color: var(--accent); }
-  .opt-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: 0.6; }
+  .opt-chip:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    color: var(--text);
+  }
+  .opt-chip.active { 
+    border-color: var(--accent); 
+    background: rgba(108, 114, 255, 0.1); 
+    color: #a5b4fc;
+    box-shadow: 0 2px 10px rgba(108, 114, 255, 0.15);
+  }
+  .opt-dot { 
+    width: 6px; height: 6px; border-radius: 50%; background: var(--muted); 
+    transition: all 0.2s ease;
+  }
+  .opt-chip.active .opt-dot {
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+  }
 
   /* ── Progress ── */
   .progress-wrap { display: none; }
   .progress-wrap.show { display: block; }
-  .progress-top { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; }
-  .progress-track { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; margin-bottom: 16px; }
-  .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.4s ease; border-radius: 2px; }
+  .progress-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .progress-track { height: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 100px; overflow: hidden; margin-bottom: 20px; }
+  .progress-fill { height: 100%; background: var(--accent-grad); width: 0%; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 100px; }
 
-  /* ── Log ── */
+  /* ── Log Box (Terminal Style) ── */
   .log-box {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 14px 16px;
-    height: 220px; overflow-y: auto; font-family: var(--mono);
+    background: #0b0c13; border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px 20px;
+    height: 240px; overflow-y: auto; font-family: var(--mono);
     font-size: 12px; line-height: 1.8;
-    scrollbar-width: thin; scrollbar-color: var(--border2) transparent;
+    scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.5);
   }
-  .log-box::-webkit-scrollbar { width: 4px; }
-  .log-box::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
-  .log-placeholder { color: var(--muted); font-family: var(--sans); font-size: 13px; }
-  .log-line { display: flex; gap: 10px; align-items: flex-start; }
-  .log-line .ic { flex-shrink: 0; margin-top: 1px; }
-  .log-line.ok   .ic { color: var(--green); }
-  .log-line.err  .ic { color: var(--red); }
+  .log-box::-webkit-scrollbar { width: 5px; }
+  .log-box::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+  .log-placeholder { color: #4e5569; font-family: var(--sans); font-size: 13px; display: block; text-align: center; margin-top: 80px; }
+  
+  .log-line { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 6px; }
+  .log-line .ic { flex-shrink: 0; font-weight: bold; width: 14px; text-align: center; }
+  
+  .log-line.ok .ic { color: var(--green); }
+  .log-line.ok .txt { color: #a7f3d0; }
+  
+  .log-line.err .ic { color: var(--red); }
+  .log-line.err .txt { color: #fecdd3; }
+  
   .log-line.warn .ic { color: var(--yellow); }
+  .log-line.warn .txt { color: #fef3c7; }
+  
   .log-line.info .ic { color: var(--cyan); }
-  .log-line .txt { color: var(--text); word-break: break-all; }
+  .log-line.info .txt { color: #e0f2fe; }
 
   /* ── Stats ── */
-  .stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 16px; }
-  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
-  .stat-num { font-size: 26px; font-weight: 600; }
-  .stat-lbl { font-size: 12px; color: var(--muted); margin-top: 2px; }
-  .stat-ok  .stat-num { color: var(--green); }
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .stat-card { 
+    background: var(--surface); 
+    border: 1px solid var(--border); 
+    border-radius: var(--radius); 
+    padding: 16px; 
+    text-align: center;
+    transition: transform 0.2s ease;
+  }
+  .stat-card:hover {
+    transform: translateY(-2px);
+  }
+  .stat-num { font-size: 28px; font-weight: 700; line-height: 1.2; letter-spacing: -0.02em; }
+  .stat-lbl { font-size: 11px; color: var(--muted); margin-top: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  
+  .stat-ok { border-bottom: 3px solid var(--green); }
+  .stat-ok .stat-num { color: var(--green); }
+  
+  .stat-fail { border-bottom: 3px solid var(--red); }
   .stat-fail .stat-num { color: var(--red); }
+  
+  .stat-size { border-bottom: 3px solid var(--cyan); }
   .stat-size .stat-num { color: var(--cyan); }
 
-  .dl-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .dl-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .dl-row .btn { flex: 1; min-width: 140px; }
   .result-section { display: none; }
-  .result-section.show { display: block; }
+  .result-section.show { display: block; animation: slideUp 0.4s ease; }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
   /* ── Spinner ── */
   @keyframes spin { to { transform: rotate(360deg); } }
-  .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
+  .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.2); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; flex-shrink: 0; }
 
   @media (max-width: 480px) {
+    body { padding: 30px 14px 60px; }
     .url-row { flex-direction: column; }
-    .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-    .header h1 { font-size: 26px; }
+    .btn-reset { width: 100%; }
+    .stats-grid { grid-template-columns: 1fr; gap: 10px; }
+    .header h1 { font-size: 30px; }
+    .card { padding: 20px; }
   }
 </style>
 </head>
@@ -171,24 +309,27 @@
   <div class="header">
     <div class="logo"><span class="logo-dot"></span> Web Scraper</div>
     <h1>Scrape Web <span>→ ZIP</span></h1>
-    <p>Tempel URL, pilih aset yang ingin diunduh,<br>lalu simpan seluruh halaman sebagai file ZIP.</p>
+    <p>Tempel URL, pilih aset yang ingin diunduh, lalu simpan seluruh halaman sebagai file ZIP secara instan.</p>
   </div>
 
-  <!-- URL Input -->
+  <!-- URL Target Input -->
   <div class="card">
     <div class="card-label">URL Target</div>
     <div class="url-row">
-      <input id="urlInput" class="url-input" type="url"
-        placeholder="https://example.com" autocomplete="off" spellcheck="false"
-        onkeydown="if(event.key==='Enter') startScrape()"/>
+      <div class="url-wrapper">
+        <span class="url-icon">🔗</span>
+        <input id="urlInput" class="url-input" type="url"
+          placeholder="https://example.com" autocomplete="off" spellcheck="false"
+          onkeydown="if(event.key==='Enter') startScrape()"/>
+      </div>
       <button class="btn btn-primary" id="btnScrape" onclick="startScrape()">
         <span id="btnIcon">⚡</span> Scrape
       </button>
-      <button class="btn" onclick="clearAll()" title="Reset">↺</button>
+      <button class="btn btn-reset" onclick="clearAll()" title="Reset">↺</button>
     </div>
   </div>
 
-  <!-- Options -->
+  <!-- Options (Aset) -->
   <div class="card">
     <div class="card-label">Aset yang diambil</div>
     <div class="opts-grid">
@@ -200,29 +341,29 @@
     </div>
   </div>
 
-  <!-- Progress -->
+  <!-- Progress & Terminal Log -->
   <div class="card progress-wrap" id="progressWrap">
     <div class="progress-top">
-      <span id="progressText" style="color:var(--muted);font-size:13px">Menginisialisasi...</span>
-      <span id="progressPct" style="font-weight:500">0%</span>
+      <span id="progressText" style="color:var(--muted);font-size:13px;font-weight:500;">Menginisialisasi...</span>
+      <span id="progressPct" style="font-weight:700;color:var(--accent);">0%</span>
     </div>
     <div class="progress-track"><div class="progress-fill" id="progressBar"></div></div>
     <div class="log-box" id="logBox">
-      <span class="log-placeholder">Menunggu proses...</span>
+      <span class="log-placeholder">Menunggu inisiasi proses...</span>
     </div>
   </div>
 
-  <!-- Result -->
+  <!-- Results & Statistics -->
   <div class="card result-section" id="resultSection">
-    <div class="card-label">Hasil</div>
+    <div class="card-label">Hasil Ekstraksi</div>
     <div class="stats-grid">
-      <div class="stat-card stat-ok"><div class="stat-num" id="statOk">0</div><div class="stat-lbl">Aset berhasil</div></div>
-      <div class="stat-card stat-fail"><div class="stat-num" id="statFail">0</div><div class="stat-lbl">Aset gagal</div></div>
+      <div class="stat-card stat-ok"><div class="stat-num" id="statOk">0</div><div class="stat-lbl">Aset Berhasil</div></div>
+      <div class="stat-card stat-fail"><div class="stat-num" id="statFail">0</div><div class="stat-lbl">Aset Gagal</div></div>
       <div class="stat-card stat-size"><div class="stat-num" id="statSize">—</div><div class="stat-lbl">Ukuran ZIP</div></div>
     </div>
     <div class="dl-row">
       <button class="btn btn-green" id="btnDl" onclick="downloadZip()">⬇ Unduh ZIP</button>
-      <button class="btn" onclick="clearAll()">↺ Scrape lagi</button>
+      <button class="btn" onclick="clearAll()">↺ Scrape Lagi</button>
     </div>
   </div>
 
@@ -247,10 +388,10 @@ function log(msg, type = 'info') {
   const ph  = box.querySelector('.log-placeholder');
   if (ph) ph.remove();
 
-  const icons = { ok: '✓', err: '✗', warn: '~', info: '›' };
+  const icons = { ok: '✓', err: '✗', warn: '⚠', info: 'ℹ' };
   const line  = document.createElement('div');
   line.className = 'log-line ' + type;
-  line.innerHTML = `<span class="ic">${icons[type] || '›'}</span><span class="txt">${escHtml(msg)}</span>`;
+  line.innerHTML = `<span class="ic">${icons[type] || 'ℹ'}</span><span class="txt">${escHtml(msg)}</span>`;
   box.appendChild(line);
   box.scrollTop = box.scrollHeight;
 }
@@ -280,7 +421,7 @@ function clearAll() {
   document.getElementById('urlInput').value = '';
   document.getElementById('progressWrap').classList.remove('show');
   document.getElementById('resultSection').classList.remove('show');
-  document.getElementById('logBox').innerHTML = '<span class="log-placeholder">Menunggu proses...</span>';
+  document.getElementById('logBox').innerHTML = '<span class="log-placeholder">Menunggu inisiasi proses...</span>';
   setProgress(0, 'Menginisialisasi...');
   const btn = document.getElementById('btnScrape');
   btn.disabled = false;
